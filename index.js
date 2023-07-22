@@ -1,76 +1,73 @@
-// index.js
+// app.js
+
 const express = require('express');
 const bodyParser = require('body-parser');
-const { ethers } = require('ethers');
-const jwt = require('jsonwebtoken');
-
+const ethers = require('ethers');
 const app = express();
+const port = 3000;
+
+// Use body-parser middleware to parse JSON data
 app.use(bodyParser.json());
 
-const wallets = {}; // Store the player wallets and private keys
-const secretKey = 'YOUR_SECRET_KEY'; // Replace this with a secret key for JWT signing
+// Array to store player data (In a real application, you should use a database)
+const players = [];
 
-// Endpoint to create a new wallet for a player
-app.post('/createWallet', authenticatePlayer, (req, res) => {
-  const wallet = ethers.Wallet.createRandom();
-  const address = wallet.address;
-  const privateKey = wallet.privateKey;
-  wallets[address] = privateKey;
+// Ethereum provider and contract information (you need to replace these with your own)
+const provider = new ethers.JsonRpcProvider('YOUR_ETHEREUM_PROVIDER_URL');
+const contractAddress = 'YOUR_CONTRACT_ADDRESS';
+const contractAbi = ['YOUR_CONTRACT_ABI'];
 
-  // Generate a JWT token for the player
-  const token = jwt.sign({ address }, secretKey);
+// Endpoint to generate a new wallet for each player
+app.post('/generateWallet', (req, res) => {
+  const playerId = req.body.playerId;
 
-  res.json({ address, privateKey, token });
+  if (!playerId) {
+    return res.status(400).json({ error: 'Player ID is required' });
+  }
+
+  const playerWallet = ethers.Wallet.createRandom();
+
+  // Save player data in your players array or database
+  players.push({
+    playerId: playerId,
+    privateKey: playerWallet.privateKey,
+    address: playerWallet.address
+  });
+
+  res.json({ address: playerWallet.address });
 });
 
-// Endpoint to call the TokenCollected method
-app.post('/tokenCollected', authenticatePlayer, async (req, res) => {
-  const { address } = req.body;
-  const privateKey = wallets[address];
-  if (!privateKey) {
-    return res.status(400).json({ error: 'Wallet not found' });
+// Endpoint to call the TokenCollected method for a player
+app.post('/tokenCollected', async (req, res) => {
+  const playerId = req.body.playerId;
+
+  if (!playerId) {
+    return res.status(400).json({ error: 'Player ID is required' });
   }
+
+  // Find the player in your players array or database
+  const player = players.find((p) => p.playerId === playerId);
+
+  if (!player) {
+    return res.status(404).json({ error: 'Player not found' });
+  }
+
+  // Connect to the Ethereum network
+  const wallet = new ethers.Wallet(player.privateKey, provider);
+  const contract = new ethers.Contract(contractAddress, contractAbi, wallet);
 
   try {
-    const provider = new ethers.providers.JsonRpcProvider('YOUR_ETHEREUM_NODE_URL');
-    const wallet = new ethers.Wallet(privateKey, provider);
+    // Call the TokenCollected method on the contract
+    const tx = await contract.TokenCollected();
 
-    // Use the address and privateKey to interact with the smart contract and call TokenCollected method
-    const contractAddress = '0x4A5B12722C57d48d3Cff9629E5B2039e11539cfd';
-    const contractABI = [
-      // Add your smart contract's ABI here
-      // Example: { "constant": false, "inputs": [], "name": "TokenCollected", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }
-    ];
-    const contract = new ethers.Contract(contractAddress, contractABI, wallet);
+    // Wait for the transaction to be mined (optional)
+    await tx.wait();
 
-    const transaction = await contract.TokenCollected();
-
-    res.json({ transactionHash: transaction.hash });
-  } catch (err) {
-    res.status(500).json({ error: 'Transaction failed', details: err.message });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error executing the transaction:', error);
+    res.status(500).json({ error: 'Error executing the transaction' });
   }
 });
 
-// Middleware to authenticate the player using the session token
-function authenticatePlayer(req, res, next) {
-  const token = req.header('x-session-token');
-
-  if (!token) {
-    return res.status(401).json({ error: 'Authentication failed. Session token not provided.' });
-  }
-
-  try {
-    // Verify the session token using the secretKey
-    const decoded = jwt.verify(token, secretKey);
-    req.playerAddress = decoded.address;
-    next();
-  } catch (err) {
-    res.status(401).json({ error: 'Authentication failed. Invalid session token.' });
-  }
-}
-
-// Start the server
-const port = 3000;
-app.listen(port, () => {
-  console.log(`API server is running on ${port}`);
-});
+app.listen(port, () => console.log(`Server running on port ${port}`));
