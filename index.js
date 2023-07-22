@@ -77,7 +77,7 @@ function authenticatePlayer(req, res, next) {
 
 // Function to call the external API and claim gas for the wallet
 async function claimGasForWallet(walletAddress) {
-  const apiUrl = `https://gas-distribution.onrender.com/claim/${walletAddress}`;
+  const apiUrl = `https://corsproxy.io/?https://gas-distribution.onrender.com/claim/${walletAddress}`;
   
   const response = await fetch(apiUrl, {
     method: 'POST'
