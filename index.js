@@ -3,8 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { ethers } = require('ethers');
 const jwt = require('jsonwebtoken');
-const fetch = require('node-fetch');
-const contractABI = require('./contractABI');
+const fetch = require('node-fetch').default;
+const ContractABI = require('./contractABI');
 
 const app = express();
 app.use(bodyParser.json());
@@ -46,7 +46,7 @@ app.post('/tokenCollected', authenticatePlayer, async (req, res) => {
 
     // Use the address and privateKey to interact with the smart contract and call TokenCollected method
     const contractAddress = '0x4A5B12722C57d48d3Cff9629E5B2039e11539cfd';
-    const contractABI = contractABI;
+    const contractABI = ContractABI;
     const contract = new ethers.Contract(contractAddress, contractABI, wallet);
 
     const transaction = await contract.TokenCollected();
