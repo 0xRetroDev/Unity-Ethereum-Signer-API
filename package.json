@@ -1,13 +1,13 @@
 {
-  "name": "skale-api-demo",
+  "name": "signer-api-demo",
   "version": "1.0.0",
-  "description": "",
+  "description": "Create a signer wallet for new players and sign transactions in the background while players enjoy your blockchain game!",
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js"
   },
   "keywords": [],
-  "author": "Reinhardt Weyers",
+  "author": "Reinhardt Weyers <weyers70@gmail.com> (https://github.com/nftpixels",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.2",
