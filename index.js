@@ -3,8 +3,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { ethers } = require('ethers');
 const jwt = require('jsonwebtoken');
-const fetch = require('node-fetch').default;
-const ContractABI = require('./contractABI');
 
 const app = express();
 app.use(bodyParser.json());
@@ -12,10 +10,8 @@ app.use(bodyParser.json());
 const wallets = {}; // Store the player wallets and private keys
 const secretKey = 'YOUR_SECRET_KEY'; // Replace this with a secret key for JWT signing
 
-
 // Endpoint to create a new wallet for a player
-app.post('/createWallet', authenticatePlayer, async (req, res) => {
-  console.log('Receiving Request from player');
+app.post('/createWallet', authenticatePlayer, (req, res) => {
   const wallet = ethers.Wallet.createRandom();
   const address = wallet.address;
   const privateKey = wallet.privateKey;
@@ -24,13 +20,7 @@ app.post('/createWallet', authenticatePlayer, async (req, res) => {
   // Generate a JWT token for the player
   const token = jwt.sign({ address }, secretKey);
 
-  // Call the external API to claim gas for the wallet
-  try {
-    await claimGasForWallet(address);
-    res.json({ address, privateKey, token });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to claim gas for wallet', details: err.message });
-  }
+  res.json({ address, privateKey, token });
 });
 
 // Endpoint to call the TokenCollected method
@@ -42,12 +32,15 @@ app.post('/tokenCollected', authenticatePlayer, async (req, res) => {
   }
 
   try {
-    const provider = new ethers.providers.JsonRpcProvider('https://mainnet.skalenodes.com/v1/honorable-steel-rasalhague');
+    const provider = new ethers.providers.JsonRpcProvider('YOUR_ETHEREUM_NODE_URL');
     const wallet = new ethers.Wallet(privateKey, provider);
 
     // Use the address and privateKey to interact with the smart contract and call TokenCollected method
     const contractAddress = '0x4A5B12722C57d48d3Cff9629E5B2039e11539cfd';
-    const contractABI = ContractABI;
+    const contractABI = [
+      // Add your smart contract's ABI here
+      // Example: { "constant": false, "inputs": [], "name": "TokenCollected", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }
+    ];
     const contract = new ethers.Contract(contractAddress, contractABI, wallet);
 
     const transaction = await contract.TokenCollected();
@@ -76,24 +69,8 @@ function authenticatePlayer(req, res, next) {
   }
 }
 
-// Function to call the external API and claim gas for the wallet
-async function claimGasForWallet(walletAddress) {
-  const apiUrl = `https://corsproxy.io/?https://gas-distribution.onrender.com/claim/${walletAddress}`;
-  
-  const response = await fetch(apiUrl, {
-    method: 'POST'
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to claim gas for wallet. API responded with status: ${response.status}`);
-  }
-
-  // Gas successfully claimed
-  return true;
-}
-
 // Start the server
 const port = 3000;
 app.listen(port, () => {
-  console.log(`API server is running on http://localhost:${port}`);
+  console.log(`API server is running on ${port}`);
 });
