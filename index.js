@@ -15,6 +15,7 @@ const secretKey = 'YOUR_SECRET_KEY'; // Replace this with a secret key for JWT s
 
 // Endpoint to create a new wallet for a player
 app.post('/createWallet', authenticatePlayer, async (req, res) => {
+  console.log('Receiving Request from player');
   const wallet = ethers.Wallet.createRandom();
   const address = wallet.address;
   const privateKey = wallet.privateKey;
