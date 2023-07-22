@@ -78,5 +78,5 @@ function authenticatePlayer(req, res, next) {
 // Start the server
 const port = 8888;
 app.listen(port, () => {
-  console.log(`API server is running on http://localhost:${port}`);
+  console.log(`API server is running on ${port}`);
 });
