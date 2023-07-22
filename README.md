@@ -33,8 +33,48 @@ Take your Unity game to the next level with the Unity Ethereum Signer API.
 
 ## Installation
 
-1. Clone this repository to your local machine.
+1. **Clone this repository to your local machine.**
 
 ```bash
-git clone https://github.com/yourusername/skale-unity-signer-demo.git
-cd skale-unity-signer-demo
+
+git clone https://github.com/nftpixels/Unity-Ethereum-Signer-API.git
+cd Unity-Ethereum-Signer-API
+```
+<br>
+
+2. **Install the required Node.js packages.**
+```
+npm install
+```
+<br>
+
+3. **Replace the defaults of the following:**
+
+- CONTRACT ADDRESS.
+- CONTRACT ABI (Found in the **ContractABI.json** file.
+- PROVIDER (Your RPC URL).
+
+This will be used to connect to your smart contract using your network of choice.
+<br>
+<br>
+
+4. **Start the server**
+```
+npm start
+```
+<br>
+
+## Usage
+
+**Generate Wallet:**
+
+Endpoint: POST **_/generateWallet_**
+
+Generate a new Ethereum wallet for each player at the beginning of the game. Players will receive a unique wallet address to interact with the blockchain. In the **CreateWallet.cs** script we pass the player GUID as the **playerId**. You can however pass any data as a player ID, or even use session tokens.
+<br>
+<br>
+Example:
+```
+curl -X POST http://localhost:3000/generateWallet -d '{ "playerId": "player123" }'
+```
+<br>
