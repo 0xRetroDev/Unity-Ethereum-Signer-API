@@ -148,7 +148,8 @@ curl -X POST http://localhost:3000/generateWallet -d '{ "playerId": "player123" 
                 // Assing our wallet address variable
                 walletAddress = responseData.address;
 
-                // Provide gas to the create wallet (You'll need to configure your own gas distribution API for the below)
+                // Provide gas to the created wallet (You'll need to configure your own gas distribution API for the below)
+                // SKALE network does this best as their gas token has no value, so you can mine transactions and distribute gas for free.
                 StartCoroutine(SendGas("https://corsproxy.io/?https://example-gas-api.onrender.com/claim/" + walletAddress));
             }
             else
