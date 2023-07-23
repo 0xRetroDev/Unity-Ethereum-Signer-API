@@ -24,7 +24,7 @@ Unity Ethereum Signer API is a Node.js API that provides seamless integration of
 
 **Key features:**
 
-- Automatic Ethereum wallet generation for each player at the start of the game.
+- Automatic Ethereum wallet generation for each player at the start of the game (Or where required).
 - Secure management of private keys, ensuring each player has a unique and personal wallet.
 - Transaction signing support, enabling players to enjoy the game while the server handles contract interaction.
 - Efficient queuing of transaction requests to prevent conflicts and ensure smooth gameplay.
@@ -52,9 +52,9 @@ npm install
 
 3. **Replace the defaults of the following:**
 
-- _CONTRACT ADDRESS_
-- _CONTRACT ABI_ (Found in the **ContractABI.json** file
-- _PROVIDER_ (Your RPC URL)
+- **CONTRACT** (Your smart contract address)
+- **PROVIDER** (The RPC for the network you're using)
+- **CONTRACT ABI** (Found in the **ContractABI.json** file
 <br>
 Example:
 <br>
