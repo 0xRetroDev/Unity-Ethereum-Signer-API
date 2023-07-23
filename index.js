@@ -64,7 +64,7 @@ app.post('/generateWallet', (req, res) => {
 ///////////////////////////////////////////////////////
 
 // This endpoint can be renamed and modified to handle any kind of contract method (Remember to add parameters if required)
-app.post('/tokenCollected', async (req, res) => {
+app.post('/signTransaction', async (req, res) => {
   console.log('Received Transacion request:', req.body);
   const playerId = req.body.playerId;
 
