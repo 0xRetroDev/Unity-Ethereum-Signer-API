@@ -8,6 +8,8 @@
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/97366705/231331134-fb9d64c2-f3b8-404b-9cae-12124f9bbfe5.png" width=600>
+  <br><br>
+<b>Unity Example & Demo:</b> https://github.com/nftpixels/Unity-Ethereum-Signer-Demo
 </p>
 
 ## Table of Contents
@@ -30,8 +32,8 @@ Unity Ethereum Signer API is a Node.js API that provides seamless integration of
 - Efficient queuing of transaction requests to prevent conflicts and ensure smooth gameplay.
 
 Take your Unity game to the next level with the Unity Ethereum Signer API.
-<br><br>
-_For Unity integration, refer to the provided Unity script and make HTTP requests to the API endpoints at the appropriate game events._
+<br>
+
 
 ## Installation
 
