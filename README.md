@@ -5,10 +5,16 @@
   <br>
   <i>Unlock the true potential of your Unity game with invisible Ethereum wallet generation and transaction signing.</i>
 </p>
+![Banner - Smaller](https://github.com/nftpixels/Unity-Ethereum-Signer-API/assets/97366705/bb8cdbb2-faf5-43aa-9972-97be11f5e09c)
+
 
 <p align="center">
-![Banner](https://github.com/nftpixels/Unity-Ethereum-Signer-API/assets/97366705/6c82cc82-3ebb-41fd-880c-5d3708fdc10e)
+  <img src="https://github.com/nftpixels/Unity-Ethereum-Signer-API/assets/97366705/eb8908f5-64e4-4c4c-b41d-80369fddb5d" alt="Project Screenshot">
 </p>
+
+
+
+
 
 ## Table of Contents
 
