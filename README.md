@@ -162,7 +162,7 @@ curl -X POST http://localhost:3000/generateWallet -d '{ "playerId": "player123" 
 <br>
 
 
-**Send Transaction:**
+**Sign Transaction:**
 
 Endpoint: POST **_/signTransaction_**
 
