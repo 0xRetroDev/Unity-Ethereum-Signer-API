@@ -106,11 +106,23 @@ curl -X POST http://localhost:3000/generateWallet -d '{ "playerId": "player123" 
 ```c#
     private void Start()
     {
-        // Generate a unique playerId for the player
-        playerId = Guid.NewGuid().ToString();
+        // If the connecting player doesn't have a playerId, we generate a new one and store it the playerPrefs to be reused (This is optional and you can remove it if you prefer to generate a brand new signer for every session)
+        if (!PlayerPrefs.HasKey("playerID"))
+        {
+            Debug.Log("No ID Found, Generating a new one");
+            string newPlayerID = Guid.NewGuid().ToString();
 
-        // Generate a wallet
-        await GenerateSigner();
+            // Generate a unique playerId for the player and store it in playerPrefs
+            PlayerPrefs.SetString("playerID", newPlayerID);
+            playerId = newPlayerID;
+        }
+        else
+        {
+            playerId = PlayerPrefs.GetString("playerID");
+        }
+
+        // Invoke our signer method
+        GenerateSigner();
     }
 
 
@@ -147,7 +159,7 @@ curl -X POST http://localhost:3000/generateWallet -d '{ "playerId": "player123" 
                 var responseData = JsonUtility.FromJson<GenerateWalletResponse>(responseJson);
                 Debug.Log("Wallet generated for player " + playerId + " - Address: " + responseData.address);
 
-                // Assing our wallet address variable
+                // Adding our wallet address variable
                 walletAddress = responseData.address;
 
                 // Provide gas to the created wallet (You'll need to configure your own gas distribution API for the below)
@@ -156,7 +168,24 @@ curl -X POST http://localhost:3000/generateWallet -d '{ "playerId": "player123" 
             }
             else
             {
-                Debug.LogError("Error generating wallet: " + request.error);
+                {
+                    // Check if there's an error in the response data
+                    var responseJson = request.downloadHandler.text;
+                    if (!string.IsNullOrEmpty(responseJson))
+                    {
+                        // Deserialize the JSON error message from the response
+                        var errorData = JsonUtility.FromJson<ErrorResponse>(responseJson);
+                        Debug.LogError("Error generating wallet: " + errorData.message);
+
+                        // The only reason we'd get this error is to let us know we already have a signer, which means we can load the level
+                        SceneManager.LoadScene("GameScene");
+                    }
+                    else
+                    {
+                        // If there's no response data or error message, display the generic error
+                        Debug.LogError("Error generating wallet: " + request.result);
+                    }
+                }
             }
         }
     }
