@@ -8,6 +8,8 @@
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/97366705/231331134-fb9d64c2-f3b8-404b-9cae-12124f9bbfe5.png" width=600>
+  <br><br>
+<b>Unity Example & Demo:</b> https://github.com/nftpixels/Unity-Ethereum-Signer-Demo
 </p>
 
 ## Table of Contents
@@ -24,14 +26,14 @@ Unity Ethereum Signer API is a Node.js API that provides seamless integration of
 
 **Key features:**
 
-- Automatic Ethereum wallet generation for each player at the start of the game.
+- Automatic Ethereum wallet generation for each player at the start of the game (Or where required).
 - Secure management of private keys, ensuring each player has a unique and personal wallet.
-- Transaction signing support, enabling players to enjoy the game while the server handles contract interaction in the backround.
+- Transaction signing support, enabling players to enjoy the game while the server handles contract interaction.
 - Efficient queuing of transaction requests to prevent conflicts and ensure smooth gameplay.
 
 Take your Unity game to the next level with the Unity Ethereum Signer API.
-<br><br>
-_For Unity integration, refer to the provided Unity script and make HTTP requests to the API endpoints at the appropriate game events._
+<br>
+
 
 ## Installation
 
@@ -52,9 +54,26 @@ npm install
 
 3. **Replace the defaults of the following:**
 
-- _CONTRACT ADDRESS_
-- _CONTRACT ABI_ (Found in the **ContractABI.json** file
-- _PROVIDER_ (Your RPC URL)
+- **CONTRACT** (Your smart contract address)
+- **PROVIDER** (The RPC for the network you're using)
+- **CONTRACT ABI** (Found in the **ContractABI.json** file
+<br>
+Example:
+<br>
+<br>
+
+```node
+///////////////////////////////////////////////////////
+//    Ethereum provider and contract information     //
+///////////////////////////////////////////////////////
+
+const ContractABI = require('./contractABI');
+
+// You need to replace these with your own
+const provider = new ethers.JsonRpcProvider('https://mainnet.skalenodes.com/v1/honorable-steel-rasalhague');
+const contractAddress = '0xC6633354CeB5Ed42cF26EA5F4a24DE7b833C8c86';
+const contractAbi = ContractABI;
+```
 
 This will be used to connect to your smart contract using your network of choice.
 <br>
@@ -131,7 +150,8 @@ curl -X POST http://localhost:3000/generateWallet -d '{ "playerId": "player123" 
                 // Assing our wallet address variable
                 walletAddress = responseData.address;
 
-                // Provide gas to the create wallet (You'll need to configure your own gas distribution API for the below)
+                // Provide gas to the created wallet (You'll need to configure your own gas distribution API for the below)
+                // SKALE network does this best as their gas token has no value, so you can mine transactions and distribute gas for free.
                 StartCoroutine(SendGas("https://corsproxy.io/?https://example-gas-api.onrender.com/claim/" + walletAddress));
             }
             else
@@ -144,9 +164,9 @@ curl -X POST http://localhost:3000/generateWallet -d '{ "playerId": "player123" 
 <br>
 
 
-**Send Transaction:**
+**Sign Transaction:**
 
-Endpoint: POST **_/tokenCollected_**
+Endpoint: POST **_/signTransaction_**
 
 Call the TokenCollected method on the example contract for a player when they collect tokens in the game. This will initiate a transaction using their generated wallet.
 This is just an **example** method and can be replaced with any method and endpoint. _eg. /mintNFT could invoke a mint function on the node server and use parameters passed from the Unity client._
@@ -177,8 +197,8 @@ curl -X POST http://localhost:3000/tokenCollected -d '{ "playerId": "player123" 
             var json = JsonUtility.ToJson(requestData);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            // Call our API endpoint ./tokenCollected - This can be any method and endpoint however
-            var request = client.PostAsync(CreateWallet.instance.apiBaseUrl + "/tokenCollected", content);
+            // Call our API endpoint ./signTransaction - This can be any method and endpoint however
+            var request = client.PostAsync(CreateWallet.instance.apiBaseUrl + "/signTransaction", content);
             yield return new WaitUntil(() => request.IsCompleted);
 
             if (request.Exception != null)
@@ -206,4 +226,4 @@ This project is licensed under the MIT License.
 * Author: Reinhardt Weyers <br>
 * Email: weyers70@gmail.com <br>
 * GitHub: [github.com/yourusername](https://github.com/nftpixels) <br>
-* LinkedIn: [linkedin.com/in/yourprofile](https://www.linkedin.com/in/reinhardtweyers/)https://www.linkedin.com/in/reinhardtweyers/ <br>
+* LinkedIn: https://www.linkedin.com/in/reinhardtweyers/ <br>
