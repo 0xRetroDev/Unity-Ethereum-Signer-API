@@ -46,10 +46,17 @@ app.post('/generateWallet', (req, res) => {
     return res.status(400).json({ error: 'Player ID is required' });
   }
 
+  // Check if the playerID already exists
+  if (playersMap.has(playerId)) {
+    console.log('Wallet Creation Failed. Signer for ' + playerId + ' already exists!')
+    return res.status(400).json({ message: 'Wallet Creation Failed. Signer for ' + playerId + ' already exists!' });
+  }
+
   const playerWallet = ethers.Wallet.createRandom();
 
-  // Store player data in the playersMap dictionary
+  // Save player data in the playersMap dictionary
   playersMap.set(playerId, {
+    playerId: playerId,
     privateKey: playerWallet.privateKey,
     address: playerWallet.address
   });
