@@ -252,9 +252,8 @@ curl -X POST http://localhost:3000/tokenCollected -d '{ "playerId": "player123" 
 This project is licensed under the MIT License.
 
 ## Author
-* Author: Reinhardt Weyers <br>
-* Email: weyers70@gmail.com <br>
-* GitHub: [nftpixels](https://github.com/nftpixels) <br>
+* Author: 0xRetroDev <br>
+* GitHub: [nftpixels](https://github.com/0xretrodev) <br>
 * LinkedIn: https://www.linkedin.com/in/reinhardtweyers/ <br>
 
 ## Security & Liability
